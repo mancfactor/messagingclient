@@ -1,0 +1,133 @@
+.messaging-wrapper {
+    box-sizing   : border-box;
+    position     : relative;
+    height       : 75vh;
+    margin-left  : ($messaging-grid-gutter / 2);
+    margin-right : ($messaging-grid-gutter / 2);
+
+    * {
+        box-sizing : inherit;
+    }
+}
+
+.filter-bar,
+.action-bar {
+    background-color : $filter-bar-bg;
+    padding          : 5px;
+}
+
+.conversations-list,
+.messages-list {
+    display        : flex;
+    flex-direction : column;
+    height         : 100%;
+    min-height     : 500px;
+    align-items    : flex-start;
+    float          : left;
+    padding-left   : ($messaging-grid-gutter / 2);
+    padding-right  : ($messaging-grid-gutter / 2);
+}
+
+.conversations-list {
+    width : $conversation-list-width;
+}
+
+.messages-list {
+    border-left : 2px solid $messaging-border-color;
+    width       : (100% - $conversation-list-width);
+}
+
+.conversations-wrapper {
+    flex                       : 1 1 0%;
+    overflow-y                 : auto;
+    width                      : 100%;
+    -webkit-overflow-scrolling : touch;
+}
+
+.conversation-filter {
+    &::before {
+        display : table;
+    }
+
+    > div {
+        width   : 1%;
+        display : table-cell;
+
+        & + div {
+            padding-left : 5px;
+        }
+    }
+}
+
+.message-avatar {
+    width    : 60px;
+    overflow : hidden;
+
+    img {
+        max-width : 100%;
+        height    : auto;
+    }
+}
+
+.btn-load-more {
+    font-size : $messaging-font-size-base;
+    display   : block;
+}
+
+.btn-overview {
+    display : none;
+}
+
+@media screen and (max-width : $messaging-breakpoint) {
+    .mg-mailbox.push-footer {
+        margin-bottom : $site-footer-height;
+    }
+
+    .messaging-wrapper {
+        height : calc(100vh - #{($site-header-height-mobile + $page-header-height-mobile)});
+    }
+
+    .conversation-header {
+        flex : 0 0 $site-header-height-mobile;
+
+        .avatar {
+            display : none;
+        }
+    }
+
+    .messaging-wrapper {
+        margin-bottom : 100vh;
+    }
+
+    /// hide labels in buttons
+    .conversation-actions .btn > span {
+        display : none;
+    }
+
+    .conversations-list,
+    .messages-list {
+        position         : absolute;
+        top              : 0;
+        left             : 0;
+        right            : 0;
+        height           : 100%;
+        width            : 100%;
+        max-height       : none;
+        transition       : transform $messaging-transition-duration-short;
+        background-color : $messaging-background; /// opaque background to prevent overlaying issues
+        border           : 0;
+        @include transform(translateX(0) scaleX(1));
+    }
+
+    .show-messages .conversations-list {
+        @include transform(translateX(-100%) scaleX(0));
+    }
+
+    .show-overview .messages-list {
+        @include transform(translateX(100%) scaleX(0));
+    }
+
+    .btn-overview {
+        display : block;
+    }
+}

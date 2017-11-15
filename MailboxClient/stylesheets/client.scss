@@ -1,0 +1,13 @@
+@import 'variables';
+@import 'utils';
+
+/// wrap in mg-mailbox container
+.mg-mailbox {
+    @import 'base';
+    @import 'upload';
+    @import 'conversation-header';
+    @import 'messages';
+    @import 'message-actions';
+    @import 'message-details';
+    @import 'message-form';
+}

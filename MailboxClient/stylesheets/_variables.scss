@@ -1,0 +1,49 @@
+$site-footer-height : 400px !default;
+$site-header-height-mobile : 50px !default;
+
+/// transition timings
+$messaging-transition-duration : 0.3s !default;
+$messaging-transition-duration-short : 0.15s !default;
+
+/// when to switch from full-width columns to side-by-side view
+$messaging-breakpoint : $screen-sm-max !default;
+
+/// to match grid gutter in a grid system
+$messaging-grid-gutter : 10px !default;
+
+/// to match a grid system, equals a 5:7 distribution in a 12-columns-grid
+$conversation-list-width : 41.66666667% !default;
+
+/// @group background settings
+$messaging-background : #ffffff !default;
+
+$filter-bar-bg : #eeeeee !default;
+
+$conversation-bg : #eeeeee !default;
+$conversation-active-bg : #dddddd !default;
+
+/// background color for own messages
+$message-bg-self : #dff0d8 !default;
+
+/// background color for messages from other participants
+$message-bg-other : $gray-lighter !default;
+
+/// border color for conversation- and messages-panel
+$messaging-border-color : $gray-lighter !default;
+
+/// background color for the message input panel
+$message-input-bg : #eeeeee !default;
+
+/// background color for information header over message list
+$conversation-header-bg : #eeeeee !default;
+
+/// @group font settings
+$messaging-font-size-base : $font-size-base !default;
+
+$messaging-text-color : $text-color !default;
+$messaging-link-color : $brand-primary !default;
+$messaging-link-hover-color : $link-hover-color !default;
+
+$messaging-sender-color : $gray-light !default;
+$messaging-action-icon-color : $gray-light !default;
+$messaging-timestamp-color : $gray-light !default;

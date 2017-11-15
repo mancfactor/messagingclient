@@ -1,0 +1,121 @@
+.message-details {
+    flex            : 1 0 0%;
+    padding         : 0 10px;
+    display         : flex;
+    flex-direction  : row;
+    flex-wrap       : wrap;
+    justify-content : space-between;
+    min-width       : 1px; /// needed for text-overflow on .content to work
+
+    .sender {
+        line-height   : 30px;
+        flex          : 1 1 50%;
+        white-space   : nowrap;
+        overflow      : hidden;
+        text-overflow : ellipsis;
+        padding-right : 10px;
+        margin        : 0;
+    }
+
+    .content {
+        width : 100%;
+    }
+
+    .timestamp {
+        line-height : 30px;
+        text-align  : right;
+    }
+
+    .attachment {
+        max-width  : 100%;
+        margin-top : 10px;
+
+        + .attachment {
+            margin-top : 5px;
+        }
+    }
+}
+
+///
+.message.is-conversation {
+    .message-details .content {
+        line-height   : 30px;
+        flex          : 1 1 50%;
+        white-space   : nowrap;
+        overflow      : hidden;
+        text-overflow : ellipsis;
+        padding-right : 10px;
+    }
+
+    &.is-read,
+    &.is-unread {
+        .message-details .content::before {
+            color        : $messaging-action-icon-color;
+            font-family  : 'FontAwesome';
+            margin-right : 5px;
+        }
+    }
+
+    &.is-read {
+        .message-details .content::before {
+            content : '\f003';
+        }
+    }
+
+    &.is-unread {
+        .message-details .content::before {
+            content : '\f0e0';
+        }
+    }
+}
+
+///
+.message.is-message {
+    .message-details {
+        position : relative;
+
+        .sender {
+            padding-left  : 10px;
+            padding-right : 0;
+            margin        : 0;
+
+            a {
+                color           : $messaging-sender-color;
+                transition      : color $messaging-transition-duration;
+                font-size       : 14px;
+                text-decoration : none;
+
+                &:hover,
+                &:active,
+                &:focus {
+                    color : $messaging-link-hover-color;
+                }
+            }
+        }
+
+        .timestamp {
+            font-size     : 0.85em;
+            width         : 100%;
+            text-align    : right;
+            line-height   : 1.5em;
+            margin-top    : -1.5em;
+            z-index       : 1;
+            padding-right : 10px;
+            opacity       : 0;
+            color         : $messaging-timestamp-color;
+            transition    : opacity $messaging-transition-duration;
+        }
+    }
+
+    &.right {
+        .message-details {
+            flex-direction : row-reverse;
+
+            .sender {
+                text-align    : right;
+                padding-left  : 0;
+                padding-right : 10px;
+            }
+        }
+    }
+}

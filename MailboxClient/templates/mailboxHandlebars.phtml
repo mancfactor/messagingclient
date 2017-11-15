@@ -1,0 +1,227 @@
+<script id="hbs-mailbox-conversation-list" type="text/x-handlebars-template">
+    {{#if noConversations}}
+        <div class="alert alert-info"><?= $this->translate('noConversationForFilter') ?></div>
+    {{else}}
+        {{#each conversations}}
+        {{> conversationItem}}
+        {{/each}}
+
+        {{#if showLoadMoreConversations}}
+        <a href="#" class="btn btn-load-more js-conversations-load-more" data-current-mailbox="{{currentMailbox}}" data-show-archived="{{showArchived}}">
+            <?= $this->translate('loadOlderConversations') ?> <i class="fa fa-angle-down"></i>
+        </a>
+        {{/if}}
+    {{/if}}
+</script>
+
+<script id="hbs-mailbox-conversation-item" type="text/x-handlebars-template">
+    <li class="message is-conversation js-conversation {{#if isRead}}is-read{{else}}is-unread{{/if}}"
+        data-conversation-id="{{conversationId}}"
+        data-recent-message-id="{{last_message.message_id}}"
+        data-recipient-id="{{recipients.[0].username}}"
+        data-recipient-portalid="{{recipients.[0].portal}}">
+        <div class="message-avatar">
+            {{> avatar recipients.[0] showHardcore=false}}
+        </div>
+        <div class="message-details">
+            <h4 class="sender">{{recipients.[0].displayname}}</h4>
+            <div class="timestamp">{{formatDate last_message.timestamp}}</div>
+            <div class="content">{{~messageBodyProcessing last_message.message undefined undefined true~}}</div>
+            <div class="message-actions">
+                {{#if showArchived}}
+                {{else}}
+                <a href="#" class="js-archive-conversation" title="<?= $this->translate('archiveConversation') ?>" data-conversation-id="{{conversationId}}"><i class="fa fa-fw fa-lg fa-archive"></i></a>
+                {{/if}}
+                <a href="#" class="js-delete-conversation" title="<?= $this->translate('deleteConversation') ?>" data-conversation-id="{{conversationId}}"><i class="fa fa-fw fa-lg fa-trash-o"></i></a>
+            </div>
+        </div>
+    </li>
+</script>
+
+<script id="hbs-mailbox-message-list" type="text/x-handlebars-template">
+    {{#if messageCount}}
+    <a href="#" class="btn btn-load-more js-messages-load-more" data-conversation-id={{messages.0.parent}} data-ts-loadfrom="{{messages.0.timestamp}}">
+        <?= $this->translate('loadMore') ?> ({{messageCount}}) <i class="fa fa-angle-up"></i>
+    </a>
+    {{/if}}
+    {{#each messages}}
+    {{> messageItem}}
+    {{/each}}
+</script>
+
+<script id="hbs-mailbox-message-item" type="text/x-handlebars-template">
+    <li class="message is-message js-message {{messageStatus}} {{#if notown}} left {{else}} right {{/if}}" data-message-id="{{id}}" data-conversation-id="{{conversationId}}" data-client-id="{{client_id}}">
+        <div class="message-details ">
+            <h4 class="sender">
+                <a href="{{senderData.profileUrl}}">
+                    {{#if notown}}
+                    {{~nickmapper senderData.portal senderData.nick~}}
+                    {{else}}
+                    <?= $this->translate('messageSenderSelf') ?>
+                    {{/if}}
+                </a>
+            </h4>
+            {{#unless failed}}
+            <div class="message-actions">
+                {{#if notown}}
+                <a href="{{reportUrl}}" class="js-report-message" title="<?= $this->translate('reportMsg') ?>" data-message-id="{{id}}" data-conversation-id="{{conversationId}}">
+                    <i class="fa fa-fw fa-lg fa-bullhorn"></i>
+                </a>
+                <a href="{{markSpamUrl}}" class="js-spam-message" title="<?= $this->translate('reportMsgSpam') ?>" data-message-id="{{id}}" data-conversation-id="{{conversationId}}">
+                    <i class="fa fa-fw fa-lg fa-flag"></i>
+                </a>
+                {{/if}}
+                <a href="{{deleteUrl}}" class="js-delete-message" title="<?= $this->translate('deleteThisMsg') ?>" data-message-id="{{id}}" data-conversation-id="{{conversationId}}">
+                    <i class="fa fa-fw fa-lg fa-trash-o"></i>
+                </a>
+            </div>
+            {{/unless}}
+
+            <div class="content">
+                {{~messageBodyProcessing message from_portal from~}}
+                {{#if failed}}
+                <p class="alert alert-danger"><i class="fa fa-fw fa-exclamation-triangle"></i>&nbsp;{{~allowHtml errormessage~}}</p>
+                {{/if}}
+                {{#each attachments}}
+                <a class="has-preview js-fancybox" href="{{this.original}}" rel="{{../conversationId}}">
+                    <img class="img-responsive js-show-preview" src="{{this.medium}}" onLoad="mailboxClientApi.scrollToMessage()">
+                </a>
+                {{/each}}
+            </div>
+
+            <div class="timestamp">{{twitterDate timestamp 1}}</div>
+        </div>
+    </li>
+</script>
+
+<script id="hbs-mailbox-conversation-header" type="text/x-handlebars-template">
+    <div class="conversation-header" id="conversation-header">
+        <button type="button" class="btn btn-link js-back-to-overview visible-xs visible-sm">
+            <i class="fa fa-fw fa-lg fa-angle-left"></i> <?= $this->translate('Back') ?>
+        </button>
+
+        <div class="avatar">
+            <a href="{{profileUrl}}">
+                {{> avatar showHardcore=false}}
+            </a>
+        </div>
+        <div class="conversation-heading">
+            <h3><a href="{{profileUrl}}" title="<?= $this->translate('toSmbProfile', '{{displayname}}') ?>">{{displayname}}</a></h3>
+            <small class="messaging-adminhide">({{getAgeAndGender birthday gender}})</small>
+
+
+                {{#if isIgnored}}
+                <span class="is-ignored text-danger messaging-adminhide"><i class="fa fa-exclamation-circle"></i>&nbsp;<?= $this->translate('You are ignored') ?></span>
+                {{/if}}
+
+                {{#if isIgnoring}}
+                <span class="is-ignored text-danger messaging-adminhide"><i class="fa fa-exclamation-circle"></i>&nbsp;<?= $this->translate('chatUserIsIgnored') ?></span>
+                {{/if}}
+        </div>
+        <div class="conversation-actions messaging-adminhide">
+            <div class="btn-group" role="group">
+                {{#if isIgnoring}}
+                <a class="btn btn-sm btn-default js-ignore-recipient" title="<?= $this->translate('Remove Ignore') ?>" href="<?= str_replace('0', '{{u_id}}', $this->url(array('memberId' => 0), 'removeIgnoreMember')); ?>">
+                    <i class="fa fa-user-times text-success"></i>
+                </a>
+                {{else}}
+                <a class="btn btn-sm btn-default js-ignore-recipient" title="<?= $this->translate('Are you sure you want to ignore %s?', '{{nick}}') ?>" href="<?= str_replace('0', '{{u_id}}', $this->url(array('memberId' => 0), 'ignoreMember')); ?>">
+                    <i class="fa fa-user-times text-danger"></i>
+                </a>
+                {{/if}}
+                <?php if (!$this->isMobileLayout()):?>
+                    <a href="#" class="btn btn-sm btn-border-success startChat js-start-chat" title="<?= $this->translate('Chat with %s', '{{nick}}') ?>" data-recipient="{{username}}" data-portal="{{portal}}">
+                        <i class="fa fa-comments"></i> <span><?= $this->translate('openInChat') ?></span>
+                    </a>
+                <?php endif; ?>
+
+                {{#if (isOnlineWithWebcam webcamStatus)}}
+                <a href="{{camUrl}}" class="btn btn-sm btn-success js-load-webcam-new" title="<?= $this->translate('StartCamchatWith', '{{nick}}') ?>">
+                    <i class="fa fa-video-camera"></i> <span><?= $this->translate('Livecam') ?></span>
+                </a>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="hbs-mailbox-pricetag" type="text/x-handlebars-template">
+    {{#if price}}
+    <?= $this->translate('messagePrice', '{{price}}') ?>
+    {{else}}
+    <?= $this->translate('messagePriceFree'); ?>
+    {{/if}}
+</script>
+
+<script id="hbs-mailbox-avatar-partial" type="text/x-handlebars-template">
+    {{#if showHardcore}}
+    <img class="avatar-img" src="{{avatarHc}}" alt="{{nick}}" width="60" height="60">
+    {{else}}
+    <img class="avatar-img" src="{{avatar}}" alt="{{nick}}" width="60" height="60">
+    {{/if}}
+</script>
+
+<script id="hbs-mailbox-message-response" type="text/x-handlebars-template">
+    {{#if error.insufficientCoins}}
+    <p><?= $this->translate('chatNotEnoughMoney') ?></p>
+    <a href="<?= $this->url(array(), 'buycoins') ?>" target="_blank"><?= $this->translate('chatAddMoney') ?></a>
+    {{/if}}
+
+    {{#if error.isIgnored}}
+    <p><?= $this->translate('You are ignored') ?></p>
+    {{/if}}
+
+    {{#if error.general}}
+    <p>{{error.general}}</p>
+    {{/if}}
+</script>
+
+<script id="hbs-mailbox-report-message" type="text/x-handlebars-template">
+    <div class="modal mdh-modal no-logo info-small fade" id="report-message-{{messageId}}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="<?= $this->translate('close') ?>">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+                    <h4 class="modal-title"><?= $this->translate('Report Message') ?></h4>
+                </div>
+
+                <div class="modal-body">
+                    <p class="help-block"><?= $this->translate('messageReportInfo') ?></p>
+
+                    <div class="form-group">
+                        <textarea name="reason" id="report-message" rows="5" class="form-control" placeholder="<?= $this->translate('reportReason') ?>"></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <button type="reset" class="btn btn-default" data-dismiss="modal"><?= $this->translate('cancel') ?></button>
+                        <button type="button" class="btn btn-success js-submit-message-report" disabled="disabled"><?= $this->translate('Report Message') ?></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="hbs-mailbox-confirmation-modal" type="text/x-handlebars-template">
+    <div class="modal mdh-modal no-logo info-small fade" id="mailbox-confirmation" tabindex="-1" role="dialog" aria-labelledby="comfirmation-modal-title">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="comfirmation-modal-title">{{title}}</h4>
+                </div>
+                <div class="modal-body">{{message}}</div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-default js-mailbox-confirmation-cancel" data-dismiss="modal"><?= $this->translate('cancel') ?></button>
+                        <button type="button" class="btn btn-primary js-mailbox-confirmation-okay" data-dismiss="modal">{{labelOkay}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,61 @@
+.conversation-header {
+    flex             : 0 1 61px;
+    display          : flex;
+    flex-direction   : row;
+    align-items      : center;
+    width            : 100%;
+    background-color : $conversation-header-bg;
+    border-bottom    : 1px solid $brand-primary;
+
+    .avatar {
+        width    : 60px;
+        overflow : hidden;
+
+        img {
+            max-width : 100%;
+            height    : auto;
+        }
+    }
+
+    .conversation-heading {
+        flex           : 1 0 0%;
+        padding        : 0 10px;
+        overflow       : hidden;
+
+        display        : inline-flex;
+        flex-direction : row;
+        flex-wrap      : wrap;
+        align-items    : center;
+
+        h3 > a {
+            @include truncate();
+            font-size       : 16px;
+            line-height     : 1.5em;
+            flex-grow       : 0;
+            flex-basis      : auto;
+            max-width       : 85%;
+            color           : $messaging-text-color;
+            text-decoration : none;
+            border-bottom   : 1px dotted transparent;
+            transition      : color $messaging-transition-duration, border $messaging-transition-duration;
+
+            &:hover,
+            &:active,
+            &:focus {
+                color         : $messaging-link-hover-color;
+                border-bottom : 1px dotted $messaging-link-hover-color;
+            }
+        }
+
+        > small {
+            padding-left : 10px;
+            flex-basis   : auto;
+            flex-shrink  : 0;
+            flex-grow    : 1;
+        }
+
+        .is-ignored {
+            width : 100%;
+        }
+    }
+}

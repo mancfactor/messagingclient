@@ -1,0 +1,39 @@
+.message-form {
+    width            : 100%;
+    align-self       : flex-end;
+    background-color : $message-input-bg;
+    padding          : 10px;
+
+    .waiting {
+        &.waiting-delayed {
+            &::before,
+            &::after {
+                opacity                   : 0;
+                animation                 : fadeIn;
+                animation-delay           : 0.5s;
+                animation-fill-mode       : forwards;
+                animation-duration        : 0.15s;
+                animation-iteration-count : 1;
+            }
+        }
+
+        &::before {
+            background-color : rgba(255, 255, 255, 0.5);
+        }
+
+        &::after {
+            color : rgba(0, 0, 0, 0.5);
+        }
+    }
+
+    .btn {
+        &:active,
+        &:focus {
+            outline : none;
+        }
+    }
+
+    textarea {
+        resize : none;
+    }
+}

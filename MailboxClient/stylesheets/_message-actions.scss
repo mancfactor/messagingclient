@@ -1,0 +1,72 @@
+.message-actions {
+    display     : none;
+    text-align  : right;
+
+    a {
+        line-height     : 30px;
+        display         : block;
+        float           : left;
+        padding         : 0 2px;
+        color           : $gray-light;
+        transition      : color $messaging-transition-duration;
+        text-decoration : none;
+
+        &:hover,
+        &:active,
+        &:focus {
+            color : $messaging-link-color;
+        }
+    }
+
+    .tabletView & {
+        &.conversation-icons {
+            display : block;
+        }
+    }
+}
+
+.message {
+    &:hover {
+        .message-actions {
+            display: block;
+        }
+    }
+}
+
+.message.is-message {
+    .message-actions {
+        flex             : none;
+        text-align       : right;
+        position         : absolute;
+        top              : 30px;
+        right            : 5px;
+        z-index          : 1;
+        padding-left     : 0;
+        transition       : opacity $messaging-transition-duration;
+        transform-origin : right;
+        background-color : $message-bg-other;
+        background       : linear-gradient(to right, transparent, $message-bg-other 10px, $message-bg-other);
+
+    }
+
+    &.right {
+        .message-actions {
+            text-align       : left;
+            background-color : $message-bg-self;
+            background       : linear-gradient(to right, transparent, $message-bg-self 10px, $message-bg-self);
+
+            .touchevents & {
+                background : none;
+            }
+        }
+    }
+}
+
+
+@media screen and (max-width : $messaging-breakpoint) {
+    .message-actions {
+        a {
+            padding: 0 10px;
+        }
+    }
+}

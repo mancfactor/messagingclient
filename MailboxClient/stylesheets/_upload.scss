@@ -1,0 +1,63 @@
+/// confirmation panel for message attachment uploads
+.preview-upload {
+    overflow      : hidden;
+    max-height    : 0;
+    transition    : max-height $messaging-transition-duration;
+    position      : relative;
+    margin-bottom : 10px;
+
+    &::before {
+        content    : '';
+        width      : 100%;
+        height     : 100%;
+        display    : block;
+        position   : absolute;
+        transition : opacity $messaging-transition-duration, background $messaging-transition-duration;
+        background : rgba(255, 255, 255, 0.25);
+    }
+
+    &:hover {
+        &::before {
+            background : rgba(255, 255, 255, 0.75);
+        }
+    }
+
+    &.in {
+        max-height : 300px;
+    }
+
+    .btn-circle {
+        $button-size : 50px;
+
+        border-radius : $button-size;
+        line-height   : $button-size;
+        height        : $button-size;
+        padding       : 0;
+        width         : $button-size;
+        position      : absolute;
+        top           : 50%;
+        left          : 50%;
+        transform     : translate(5px, -50%);
+        font-size     : 20px;
+        transition    : background $messaging-transition-duration;
+
+        &:active,
+        &:focus {
+            outline : none;
+        }
+
+        &:first-of-type {
+            transform : translate(-($button-size + 5px), -50%);
+        }
+
+        &::after {
+            content   : attr(title);
+            font-size : 12px;
+            position  : absolute;
+            bottom    : -($button-size - 10px);
+            left      : 50%;
+            transform : translateX(-50%);
+            color     : $text-color;
+        }
+    }
+}

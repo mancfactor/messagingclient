@@ -1,0 +1,23 @@
+/// using text-overflow to display &hellip; on long title-strings
+@mixin truncate($width : auto) {
+    width         : $width;
+    overflow      : hidden;
+    white-space   : nowrap;
+    text-overflow : ellipsis;
+    box-sizing    : border-box;
+}
+
+
+/// fade in animation
+@keyframes fadeIn {
+    from,
+    to {
+        animation-timing-function : linear;
+    }
+    from {
+        opacity : 0;
+    }
+    to {
+        opacity : 1;
+    }
+}
